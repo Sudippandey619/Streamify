@@ -1,0 +1,12 @@
+node_modules/
+.env
+uploads/*.mp3
+uploads/*.wav
+uploads/*.m4a
+uploads/*.flac
+uploads/*.ogg
+uploads/*.jpg
+uploads/*.jpeg
+uploads/*.png
+uploads/*.webp
+*.log
