@@ -1,15 +1,18 @@
 {
-  "name": "@figma/my-make-file",
+  "name": "music-streaming-app",
   "private": true,
-  "version": "0.0.1",
+  "version": "1.0.0",
   "type": "module",
   "scripts": {
-    "build": "vite build",
-    "dev": "vite",
+    "build": "npm run build:frontend",
+    "build:frontend": "cd frontend && npm install && npm run build",
+    "build:backend": "cd backend && npm run build 2>nul || echo Backend build skipped",
+    "dev": "concurrently \"npm run dev:frontend\" \"npm run dev:backend\"",
+    "dev:frontend": "cd frontend && npm run dev",
     "dev:backend": "cd backend && npm run dev",
-    "dev:full": "concurrently \"npm run dev:backend\" \"npm run dev\"",
-    "install:backend": "cd backend && npm install",
-    "setup": "npm install && npm run install:backend"
+    "install:all": "npm install && cd frontend && npm install && cd ../backend && npm install",
+    "setup": "npm run install:all",
+    "start": "npm run dev"
   },
   "dependencies": {
     "@emotion/react": "11.14.0",
