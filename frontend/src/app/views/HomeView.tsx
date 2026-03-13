@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { motion } from 'motion/react';
 import { Music, Search } from 'lucide-react';
 import { SongCard } from '@/app/components/SongCard';
-import { getJamendoPopular, fetchTracks } from '@/services/api';
+import { youtubeSearchVideos, fetchTracks } from '@/services/api';
 
 interface SimpleSong {
   id: string;
@@ -21,21 +21,21 @@ const HomeView: React.FC = () => {
     let mounted = true;
     (async () => {
       try {
-        const res: any = await getJamendoPopular(12);
+        const res: any = await youtubeSearchVideos('trending music', 12);
         if (!mounted) return;
-        // Jamendo endpoint returns array of tracks
+        // YouTube endpoint returns array of videos
         const items = (res || []).map((t: any) => ({
-          id: t.id || t.track_id || t.name || JSON.stringify(t),
-          title: t.title || t.name || t.track || 'Unknown',
-          artist: t.artist_name || t.artist || 'Unknown Artist',
-          image: t.image || t.artwork?.url || t.coverUrl || t.thumbnail || '',
+          id: t.id || t.videoId || JSON.stringify(t),
+          title: t.title || 'Unknown',
+          artist: t.artist || 'Unknown Artist',
+          image: t.image || t.thumbnail || '',
           duration: t.duration || 0,
-          previewUrl: t.audio?.preview || t.audioUrl || t.streamUrl || undefined,
-          youtubeVideoId: t.youtubeVideoId || undefined,
+          previewUrl: undefined,
+          youtubeVideoId: t.youtubeVideoId || t.id || t.videoId,
         }));
         setTrending(items.slice(0, 12));
       } catch (err) {
-        console.error('Failed to load Jamendo trending:', err);
+        console.error('Failed to load YouTube trending:', err);
         try {
           const fallback = await fetchTracks();
           if (!mounted) return;
