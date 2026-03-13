@@ -23,12 +23,14 @@ const HomeView: React.FC = () => {
       try {
         const res: any = await youtubeSearchVideos('trending music', 12);
         if (!mounted) return;
-        // YouTube endpoint returns array of videos
-        const items = (res || []).map((t: any) => ({
+        
+        // YouTube endpoint returns { videos: [...] } or just array
+        const videos = res?.videos || res || [];
+        const items = (Array.isArray(videos) ? videos : []).map((t: any) => ({
           id: t.id || t.videoId || JSON.stringify(t),
           title: t.title || 'Unknown',
           artist: t.artist || 'Unknown Artist',
-          image: t.image || t.thumbnail || '',
+          image: t.image || t.thumbnail || t.thumbnails?.default?.url || '',
           duration: t.duration || 0,
           previewUrl: undefined,
           youtubeVideoId: t.youtubeVideoId || t.id || t.videoId,
@@ -39,7 +41,7 @@ const HomeView: React.FC = () => {
         try {
           const fallback = await fetchTracks();
           if (!mounted) return;
-          const items = (fallback || []).map((t: any) => ({
+          const items = (Array.isArray(fallback) ? fallback : []).map((t: any) => ({
             id: t.id,
             title: t.title,
             artist: t.artist,
